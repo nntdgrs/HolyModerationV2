@@ -1,0 +1,19 @@
+{
+  "nntdgrs": {
+    "settings": {
+      "name": "HolyModeration V2",
+      "enabled": {
+        "name": "Enabled"
+      },
+      "statisticEnabled": {
+        "name": "Prova widget"
+      },
+      "vkLink": {
+        "name": "VK link"
+      },
+      "autoAnyDeskEnabled": {
+        "name": "Auto AnyDesk"
+      }
+    }
+  }
+}

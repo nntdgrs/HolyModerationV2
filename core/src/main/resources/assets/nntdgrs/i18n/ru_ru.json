@@ -1,0 +1,19 @@
+{
+  "nntdgrs": {
+    "settings": {
+      "name": "HolyModeration V2",
+      "enabled": {
+        "name": "Мод включен"
+      },
+      "statisticEnabled": {
+        "name": "Виджет проверки(рекомендовано)"
+      },
+      "vkLink": {
+        "name": "Ссылка на ВК"
+      },
+      "autoAnyDeskEnabled": {
+        "name": "Авто-Копирование AnyDesk"
+      }
+    }
+  }
+}
