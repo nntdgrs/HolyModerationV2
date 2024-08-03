@@ -23,30 +23,33 @@ public class PlayerTimeCheckEvent {
     if (currentPlayTimeCheck) {
       if (event.chatMessage().getPlainText().startsWith("------------------PlayTimeAPI")) {
         event.setCancelled(true);
+        holyModeration.sendChat().send(" ");
       } else if (event.chatMessage().getPlainText().startsWith("Активность")) {
         event.setCancelled(true);
-        holyModeration.sendChat().send("§7[§bHM§7] §fАктивность игрока §7§l" + event.chatMessage().getPlainText().split(" ")[1]);
+        holyModeration.sendChat().send("§7[§bHM§7] §fАктивность игрока §l" + event.chatMessage().getPlainText().split(" ")[1]);
       } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().startsWith("Текущая сессия:")) {
-        lastSession = event.chatMessage().getPlainText().split(" ")[2];
-        holyModeration.sendChat().send("§7[§bHM§7] §fНаходится на: §7§l " + event.chatMessage().getPlainText().split(" ")[2]);
         event.setCancelled(true);
+        lastSession = event.chatMessage().getPlainText().split(" ")[2];
+        holyModeration.sendChat().send("§7[§bHM§7] §fНаходится на: §l" + event.chatMessage().getPlainText().split(" ")[2]);
       } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
+        event.setCancelled(true);
+      } else if (event.chatMessage().getPlainText().startsWith("Общее время в игре:")) {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().startsWith("Время бездействия:")) {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().startsWith("Последняя активность:")) {
+        event.setCancelled(true);
         lastActivityMin = extractMinutesAsInt(event.chatMessage().getPlainText());
         String[] lastActivityArray = Arrays.copyOfRange(event.chatMessage().getPlainText().split(" "), 2, event.chatMessage().getPlainText().split(" ").length);
         holyModeration.sendChat().send("§7[§bHM§7] §fПоследняя активность: " + String.join(" ", lastActivityArray));
-        event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().startsWith("Последний вход на анархию:")) {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().startsWith("---------------------------------------------------")) {
         event.setCancelled(true);
 
-        if (lastSession == "(Оффлайн)") {
+        if (lastSession.equals("(Оффлайн)")) {
           holyModeration.sendChat().send("§7[§bHM§7] §fНа проверку вызывать §cНЕЛЬЗЯ§f! Игрок §cОФФЛАЙН§f!");
           lastSession = "";
           lastActivityMin = -1;
@@ -64,7 +67,16 @@ public class PlayerTimeCheckEvent {
           lastSession = "";
           lastActivityMin = -1;
           currentPlayTimeCheck = false;
+        } else if (lastActivityMin == 0) {
+          holyModeration.sendChat().send("§7[§bHM§7] §fНа проверку вызывать §aМОЖНО§f! Игрок находится на §a" + lastSession + "§f!");
+          lastSession = "";
+          lastActivityMin = -1;
+          currentPlayTimeCheck = false;
         }
+
+        holyModeration.sendChat().send(" ");
+      } else if (event.chatMessage().getPlainText().isEmpty()) {
+        event.setCancelled(true);
       }
     }
   }

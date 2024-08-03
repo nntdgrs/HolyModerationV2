@@ -106,8 +106,8 @@ public class MessageSendEvent {
       String[] spltMessage = event.getMessage().split(" ");
 
       if (spltMessage.length == 2) {
-        // tut
-        Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + spltMessage[1]);
+        PlayerTimeCheckEvent.currentPlayTimeCheck = true;
+        Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + spltMessage[1], false);
       } else {
         holyModeration.sendChat().send("§7[§bHolyModeration§7] §fИспользуйте: /ptime <nick>");
       }
