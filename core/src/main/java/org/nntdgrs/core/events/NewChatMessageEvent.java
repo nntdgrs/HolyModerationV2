@@ -1,5 +1,6 @@
 package org.nntdgrs.core.events;
 
+import net.labymod.api.Laby;
 import net.labymod.api.client.component.event.ClickEvent;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
@@ -50,6 +51,15 @@ public class NewChatMessageEvent {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().equals("Перемещение на logo")) {
         event.setCancelled(true);
+      }
+    }
+    if (PlayerTimeCheckEvent.updatePlayerServ) {
+      if (event.chatMessage().getPlainText().startsWith("Игрок " + Laby.labyAPI().getName())) {
+        if (event.chatMessage().getPlainText().split(" ").length == 6) {
+          PlayerTimeCheckEvent.playerServ = event.chatMessage().getPlainText().split(" ")[5];
+          PlayerTimeCheckEvent.instance.CheckCurrentAnarchy(event.chatMessage().getPlainText().split(" ")[5]);
+          PlayerTimeCheckEvent.updatePlayerServ = false;
+        }
       }
     }
   }
