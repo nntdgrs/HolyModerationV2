@@ -53,14 +53,18 @@ public class HolyModerationWidget extends TextHudWidget<TextHudWidgetConfig> {
   }
 
   private void updateWidgetLine(boolean state) {
+    String formattedTime = String.format("%02d:%02d",
+        (System.currentTimeMillis() / 1000L - freezingTimer) / 60L,
+        (System.currentTimeMillis() / 1000L - freezingTimer) % 60L);
+
     this.mutesLine.updateAndFlush(TextFormat.SNAKE_CASE.toUpperCamelCase(
-        "Текущая проверка: " + (!currentRevise ? "Отсутствует" : currentCheckPlayerName + " | " + (System.currentTimeMillis() / 1000L - freezingTimer) / 60L + ":" + (System.currentTimeMillis() / 1000L - freezingTimer) % 60L)));
+        "Текущая проверка: " + (!currentRevise ? "Отсутствует" : currentCheckPlayerName + " | " + formattedTime)));
     this.mutesLine.setVisible(state);
   }
 
   public static void ReviseEnd() {
-    Laby.labyAPI().minecraft().chatExecutor().chat("/freezing " + currentCheckPlayerName);
-    Laby.labyAPI().minecraft().chatExecutor().chat("/prova");
+    Laby.labyAPI().minecraft().chatExecutor().chat("/freezing " + currentCheckPlayerName, false);
+    Laby.labyAPI().minecraft().chatExecutor().chat("/prova", false);
     currentCheckPlayerName = null;
     currentRevise = false;
     freezingTimer = 0L;

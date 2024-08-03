@@ -4,7 +4,6 @@ import net.labymod.api.client.component.event.ClickEvent;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
 import org.nntdgrs.core.Configuration;
-import org.nntdgrs.core.HolyModeration;
 import org.nntdgrs.core.widgets.HolyModerationWidget;
 
 public class NewChatMessageEvent {
@@ -39,6 +38,15 @@ public class NewChatMessageEvent {
             }
           }
         }
+      }
+    }
+    if (HolyModerationWidget.currentRevise) {
+      if (event.chatMessage().getPlainText().startsWith("[PMS]")) {
+        event.setCancelled(true);
+      } else if (event.chatMessage().getPlainText().equals("Игрок не замьючен!")) {
+        event.setCancelled(true);
+      } else if (event.chatMessage().getPlainText().equals("Перемещение на logo")) {
+        event.setCancelled(true);
       }
     }
   }

@@ -33,18 +33,20 @@ public class MessageSendEvent {
           HolyModerationWidget.ReviseEnd();
         }
       } else {
-        Laby.labyAPI().minecraft().chatExecutor().chat("/warp logo");
-        Laby.labyAPI().minecraft().chatExecutor().chat("/prova");
+        Laby.labyAPI().minecraft().chatExecutor().chat("/warp logo", false);
+        Laby.labyAPI().minecraft().chatExecutor().chat("/prova", false);
         Laby.labyAPI().minecraft().chatExecutor()
-            .chat("/freezing " + event.getMessage().split(" ")[1]);
-        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + event.getMessage().split(" ")[1]
-            + " &e&lЭто проверка на читы, у тебя есть 7 минут, что бы скинуть свой &c&lAnyDesk &eмне в &c&lЛИЧНЫЕ СООБЩЕНИЯ");
-        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + event.getMessage().split(" ")[1]
-            + " &e&lЕсли у тебя есть &c&lчиты/запрещённые моды, программы и тому подобное, &e&lто ты можешь признаться в этом, срок наказания сократится с &c&l30 &e&lдо &c&l20 дней");
-        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + event.getMessage().split(" ")[1]
-            + " &e&lТебе необходимо установить &c&lAnyDesk&e&l, для установки тебе нужно зайти в браузер и написать в поиске &c&l\"AnyDesk com\"&e&l, после чего нажать&c&l\"Скачать\"&e&l и отправить &c&lкод (Это рабочее место) &e&lмне в &c&lЛИЧНЫЕ СООБЩЕНИЯ");
+            .chat("/freezing " + freezingPlayer, false);
+        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + freezingPlayer
+            + " &e&lЭто проверка на читы, у тебя есть 7 минут, что бы скинуть свой &c&lAnyDesk &eмне в &c&lЛИЧНЫЕ СООБЩЕНИЯ", false);
+        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + freezingPlayer
+            + " &e&lЕсли у тебя есть &c&lчиты/запрещённые моды, программы и тому подобное, &e&lто ты можешь признаться в этом, срок наказания сократится с &c&l30 &e&lдо &c&l20 дней", false);
+        Laby.labyAPI().minecraft().chatExecutor().chat("/w " + freezingPlayer
+            + " &e&lТебе необходимо установить &c&lAnyDesk&e&l, для установки тебе нужно зайти в браузер и написать в поиске &c&l\"AnyDesk com\"&e&l, после чего нажать&c&l\"Скачать\"&e&l и отправить &c&lкод (Это рабочее место) &e&lмне в &c&lЛИЧНЫЕ СООБЩЕНИЯ", false);
         Laby.labyAPI().minecraft().chatExecutor()
-            .chat("/checkmute " + event.getMessage().split(" ")[1]);
+            .chat("/checkmute " + freezingPlayer, false);
+
+        holyModeration.sendChat().send("§7[§bHolyModeration§7] §fВы успешно вызвали игрока " + freezingPlayer + " на проверку. Не забудьте установить статус \"Проверка\" в журнале :)");
 
         HolyModerationWidget.freezingTimer = System.currentTimeMillis() / 1000L;
         HolyModerationWidget.currentRevise = true;
@@ -114,6 +116,6 @@ public class MessageSendEvent {
   }
 
   public static void Banip(String nick, String time, String reason, String vk) {
-    Laby.labyAPI().minecraft().chatExecutor().chat("/banip " + nick + " " + time + "d 2.4 (" + reason + ") | Вопросы? " + vk + " -s");
+    Laby.labyAPI().minecraft().chatExecutor().chat("/banip " + nick + " " + time + "d 2.4 (" + reason + ") | Вопросы? " + vk + " -s", false);
   }
 }
