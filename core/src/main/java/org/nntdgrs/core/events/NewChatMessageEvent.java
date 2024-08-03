@@ -4,14 +4,17 @@ import net.labymod.api.client.component.event.ClickEvent;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
 import org.nntdgrs.core.Configuration;
+import org.nntdgrs.core.HolyModeration;
 import org.nntdgrs.core.widgets.HolyModerationWidget;
 
 public class NewChatMessageEvent {
 
+  private final HolyModeration holyModeration;
   private final Configuration config;
 
-  public NewChatMessageEvent(Configuration config) {
+  public NewChatMessageEvent(Configuration config, HolyModeration holyModeration) {
     this.config = config;
+    this.holyModeration = holyModeration;
   }
 
   @Subscribe

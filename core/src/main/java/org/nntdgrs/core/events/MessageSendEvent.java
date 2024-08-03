@@ -101,6 +101,17 @@ public class MessageSendEvent {
         holyModeration.sendChat().send("§7[§bHolyModeration§7] §fИспользуйте: .vk <ссылка> | Пример: https://vk.com/ninetydegreess");
       }
     }
+    if (event.getMessage().startsWith("/ptime")) {
+      event.setCancelled(true);
+      String[] spltMessage = event.getMessage().split(" ");
+
+      if (spltMessage.length == 2) {
+        // tut
+        Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + spltMessage[1]);
+      } else {
+        holyModeration.sendChat().send("§7[§bHolyModeration§7] §fИспользуйте: /ptime <nick>");
+      }
+    }
   }
 
   public static boolean CheckCorrectInt(String value) {

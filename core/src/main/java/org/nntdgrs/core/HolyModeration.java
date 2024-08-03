@@ -4,6 +4,7 @@ import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.models.addon.annotation.AddonMain;
 import org.nntdgrs.core.events.MessageSendEvent;
 import org.nntdgrs.core.events.NewChatMessageEvent;
+import org.nntdgrs.core.events.PlayerTimeCheckEvent;
 import org.nntdgrs.core.generated.DefaultReferenceStorage;
 import org.nntdgrs.core.versioned.SendChat;
 import org.nntdgrs.core.widgets.HolyModerationWidget;
@@ -19,7 +20,8 @@ public class HolyModeration extends LabyAddon<Configuration> {
     sendChat = ((DefaultReferenceStorage) this.referenceStorageAccessor()).sendChat();
 
     this.labyAPI().eventBus().registerListener(new MessageSendEvent(this));
-    this.labyAPI().eventBus().registerListener(new NewChatMessageEvent(this.configuration()));
+    this.labyAPI().eventBus().registerListener(new NewChatMessageEvent(this.configuration(), this));
+    this.labyAPI().eventBus().registerListener(new PlayerTimeCheckEvent(this));
 
     this.labyAPI().hudWidgetRegistry().register(new HolyModerationWidget(this.configuration()));
 
