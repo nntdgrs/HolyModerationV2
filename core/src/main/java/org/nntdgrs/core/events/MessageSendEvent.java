@@ -12,8 +12,6 @@ public class MessageSendEvent {
 
   private final HolyModeration holyModeration;
 
-  public static String tryProverkaPlayer;
-
   public MessageSendEvent(HolyModeration holyModeration) {
     this.holyModeration = holyModeration;
   }
@@ -109,7 +107,7 @@ public class MessageSendEvent {
 
       if (spltMessage.length == 2) {
         PlayerTimeCheckEvent.currentPlayTimeCheck = true;
-        Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + spltMessage[1], false);
+        Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + spltMessage[1], true);
       } else {
         holyModeration.sendChat().send("§7[§bHolyModeration§7] §fИспользуйте: /ptime <nick>");
       }
@@ -121,9 +119,9 @@ public class MessageSendEvent {
         String[] splited = event.getMessage().split(" ");
 
         if (!HolyModerationWidget.currentRevise) {
-          tryProverkaPlayer = splited[1];
-          PlayerTimeCheckEvent.tryPorverka = true;
-          PlayerTimeCheckEvent.sendPlayerTime(splited[1], false);
+          TryProvaEvent.tryPlayer = splited[1];
+          TryProvaEvent.currentTry = true;
+          Laby.labyAPI().minecraft().chatExecutor().chat("/find " + Laby.labyAPI().getName(), false);
         }
       }
     }

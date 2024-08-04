@@ -20,26 +20,20 @@ public class NewChatMessageEvent {
 
   @Subscribe
   public void onChatReceiveEvent(ChatReceiveEvent event) {
-    if (config.autoAnyDeskEnabled().get()) {
-      if (!event.chatMessage().getPlainText().isEmpty()) {
-        String message = event.chatMessage().getPlainText();
-
-        if (HolyModerationWidget.currentCheckPlayerName == null) return;
-
-        if (message.contains(HolyModerationWidget.currentCheckPlayerName)) {
-          if (message.startsWith("[" + HolyModerationWidget.currentCheckPlayerName + " ->")) {
-            String msgText = message.split("я]", 0)[1].replace(" ", "");
-
-            if (CheckCorrectLong(msgText) && msgText.length() >= 9 && msgText.length() <= 11) {
-              ClickEvent.copyToClipboard(msgText);
-            }
+    if (config.autoAnyDeskEnabled().get() && HolyModerationWidget.currentRevise) {
+      String message = event.chatMessage().getPlainText();
+      if (HolyModerationWidget.currentCheckPlayerName == null) return;
+      if (message.contains(HolyModerationWidget.currentCheckPlayerName)) {
+        if (message.startsWith("[" + HolyModerationWidget.currentCheckPlayerName + " ->")) {
+          String msgText = message.split("я]", 0)[1].replace(" ", "");
+          if (CheckCorrectLong(msgText) && msgText.length() >= 9 && msgText.length() <= 11) {
+            ClickEvent.copyToClipboard(msgText);
           }
-          if (message.contains(":")) {
-            String chatText = message.split(":")[1].replace(" ", "");
-
-            if (CheckCorrectLong(chatText) && chatText.length() >= 9 && chatText.length() <= 11) {
-              ClickEvent.copyToClipboard(chatText);
-            }
+        }
+        if (message.contains(":")) {
+          String chatText = message.split(":")[1].replace(" ", "");
+          if (CheckCorrectLong(chatText) && chatText.length() >= 9 && chatText.length() <= 11) {
+            ClickEvent.copyToClipboard(chatText);
           }
         }
       }
@@ -49,17 +43,8 @@ public class NewChatMessageEvent {
         event.setCancelled(true);
       } else if (event.chatMessage().getPlainText().equals("Игрок не замьючен!")) {
         event.setCancelled(true);
-      } else if (event.chatMessage().getPlainText().equals("Перемещение на logo")) {
+      } else if (event.chatMessage().getPlainText().equals("Перемещение на logo.")) {
         event.setCancelled(true);
-      }
-    }
-    if (PlayerTimeCheckEvent.updatePlayerServ) {
-      if (event.chatMessage().getPlainText().startsWith("Игрок " + Laby.labyAPI().getName())) {
-        if (event.chatMessage().getPlainText().split(" ").length == 6) {
-          PlayerTimeCheckEvent.playerServ = event.chatMessage().getPlainText().split(" ")[5];
-          PlayerTimeCheckEvent.instance.CheckCurrentAnarchy(event.chatMessage().getPlainText().split(" ")[5]);
-          PlayerTimeCheckEvent.updatePlayerServ = false;
-        }
       }
     }
   }

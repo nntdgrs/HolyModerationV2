@@ -6,6 +6,7 @@ import org.nntdgrs.core.events.MessageSendEvent;
 import org.nntdgrs.core.events.NewChatMessageEvent;
 import org.nntdgrs.core.events.OnServerJoinEvent;
 import org.nntdgrs.core.events.PlayerTimeCheckEvent;
+import org.nntdgrs.core.events.TryProvaEvent;
 import org.nntdgrs.core.generated.DefaultReferenceStorage;
 import org.nntdgrs.core.versioned.SendChat;
 import org.nntdgrs.core.widgets.HolyModerationWidget;
@@ -24,6 +25,7 @@ public class HolyModeration extends LabyAddon<Configuration> {
     this.labyAPI().eventBus().registerListener(new NewChatMessageEvent(this.configuration(), this));
     this.labyAPI().eventBus().registerListener(new PlayerTimeCheckEvent(this));
     this.labyAPI().eventBus().registerListener(new OnServerJoinEvent());
+    this.labyAPI().eventBus().registerListener(new TryProvaEvent(this));
 
     this.labyAPI().hudWidgetRegistry().register(new HolyModerationWidget(this.configuration()));
 
