@@ -4,6 +4,7 @@ import net.labymod.api.Laby;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
 import org.nntdgrs.core.HolyModeration;
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 public class TryProvaEvent {
   private final HolyModeration holyModeration;
@@ -17,6 +18,7 @@ public class TryProvaEvent {
 
   public static String lastTryPlayerSession = "";
   public static String moderLastSession = "";
+  public static Boolean tryPlayerFind = false;
 
   private Boolean tryPlayerTimeCheck = false;
   private static Boolean updateModerServer = false;
@@ -35,67 +37,80 @@ public class TryProvaEvent {
           tryPlayerTimeCheck = true;
           lastTryPlayerSession = event.chatMessage().getPlainText().split(" ")[5];
           Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + tryPlayer);
-        } else if (event.chatMessage().getPlainText().startsWith("Игрок " + Laby.labyAPI().getName())) {
-          if (event.chatMessage().getPlainText().split(" ").length == 6) {
-            if (updateModerServer) {
-              CheckCurrentAnarchy(event.chatMessage().getPlainText().split(" ")[5]);
-            }
-            moderLastSession = event.chatMessage().getPlainText().split(" ")[5];
-          }
         }
-
-        if (tryPlayerTimeCheck) {
-          if (event.chatMessage().getPlainText().startsWith("------------------PlayTimeAPI")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Активность")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Текущая сессия:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Общее время в игре:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Время бездействия:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Последняя активность:")) {
-            lastTryPlayerActivityMin = extractMinutesAsInt(event.chatMessage().getPlainText());
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("Последний вход на анархию:")) {
-            event.setCancelled(true);
-          } else if (event.chatMessage().getPlainText().startsWith("---------------------------------------------------")) {
-            event.setCancelled(true);
+      } else if (event.chatMessage().getPlainText().startsWith("Игрок " + Laby.labyAPI().getName())) {
+        event.setCancelled(true);
+        if (event.chatMessage().getPlainText().split(" ").length == 6) {
+          if (updateModerServer) {
+            CheckCurrentAnarchy(event.chatMessage().getPlainText().split(" ")[5]);
           }
+          moderLastSession = event.chatMessage().getPlainText().split(" ")[5];
+          Laby.labyAPI().minecraft().chatExecutor().chat("/find " + tryPlayer);
+          tryPlayerFind = true;
+        }
+      } else if (event.chatMessage().getPlainText().startsWith("Игрок оффлайн") && tryPlayerFind) {
+        event.setCancelled(true);
+        tryPlayerFind = false;
+        holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cНЕ В СЕТИ§f! Вызов на проверку §cневозможен§f!");
+        currentTry = false;
+        tryPlayer = null;
+        moderLastSession = null;
+        lastTryPlayerSession = null;
+        tryPlayerTimeCheck = false;
+        lastTryPlayerActivityMin = 0;
+        updateModerServer = false;
+      }
+
+      if (tryPlayerTimeCheck) {
+        if (event.chatMessage().getPlainText().startsWith("------------------PlayTimeAPI")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Активность")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Текущая сессия:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Общее время активности в игре:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Общее время в игре:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Время бездействия:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Последняя активность:")) {
+          lastTryPlayerActivityMin = extractMinutesAsInt(event.chatMessage().getPlainText());
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("Последний вход на анархию:")) {
+          event.setCancelled(true);
+        } else if (event.chatMessage().getPlainText().startsWith("---------------------------------------------------")) {
+          event.setCancelled(true);
+        }
+        tryPlayerTimeCheck = false;
+        if (lastTryPlayerActivityMin == 0 && !lastTryPlayerSession.equals("(Оффлайн)")) {
+          Laby.labyAPI().minecraft().chatExecutor().chat("/hub", false);
+          holyModeration.sendChat().send(" ");
+          holyModeration.sendChat().send("§7[§bHM§7] §fИгрока §aможно §fпроверять.");
+          holyModeration.sendChat().send("§7[§bHM§7] §fВы были перемещены в lobby. Заходите на §a" + lastTryPlayerSession);
+          holyModeration.sendChat().send("§7[§bHM§7] §fПри заходе на указаную анархию, вы §aавтоматически§f вызовите его на §eпроверку§f.");
+          holyModeration.sendChat().send("§7[§bHM§7] §fЕсли вы §cпередумали его проверять, пропишите §e.canceltry!");
+          holyModeration.sendChat().send(" ");
+        } else if (lastTryPlayerActivityMin > 0) {
+          holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cAFK§f! Вызов на проверку §cневозможен§f!");
+          currentTry = false;
+          tryPlayer = null;
+          moderLastSession = null;
+          lastTryPlayerSession = null;
           tryPlayerTimeCheck = false;
-
-          if (lastTryPlayerActivityMin == 0 && !lastTryPlayerSession.equals("(Оффлайн)")) {
-            Laby.labyAPI().minecraft().chatExecutor().chat("/hub", false);
-            holyModeration.sendChat().send(" ");
-            holyModeration.sendChat().send("§7[§bHM§7] §fИгрока §aможно §fпроверять.");
-            holyModeration.sendChat().send("§7[§bHM§7] §fВы были перемещены в lobby. Заходите на §a" + lastTryPlayerSession);
-            holyModeration.sendChat().send("§7[§bHM§7] §fПри заходе на указаную анархию, вы §aавтоматически§f вызовите его на §eпроверку§f.");
-            holyModeration.sendChat().send("§7[§bHM§7] §fЕсли вы §cпередумали его проверять, пропишите §e.canceltry!");
-            holyModeration.sendChat().send(" ");
-          } else if (lastTryPlayerActivityMin > 0) {
-            holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cAFK§f! Вызов на проверку §cневозможен§f!");
-            currentTry = false;
-            tryPlayer = null;
-            moderLastSession = null;
-            lastTryPlayerSession = null;
-            tryPlayerTimeCheck = false;
-            lastTryPlayerActivityMin = 0;
-            updateModerServer = false;
-          } else if (lastTryPlayerSession.equals("(Оффлайн)")) {
-            holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cНЕ В СЕТИ§f! Вызов на проверку §cневозможен§f!");
-            currentTry = false;
-            tryPlayer = null;
-            moderLastSession = null;
-            lastTryPlayerSession = null;
-            tryPlayerTimeCheck = false;
-            lastTryPlayerActivityMin = 0;
-            updateModerServer = false;
-          }
+          lastTryPlayerActivityMin = 0;
+          updateModerServer = false;
+        } else if (lastTryPlayerSession.equals("(Оффлайн)")) {
+          holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cНЕ В СЕТИ§f! Вызов на проверку §cневозможен§f!");
+          currentTry = false;
+          tryPlayer = null;
+          moderLastSession = null;
+          lastTryPlayerSession = null;
+          tryPlayerTimeCheck = false;
+          lastTryPlayerActivityMin = 0;
+          updateModerServer = false;
         }
       }
     }

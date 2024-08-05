@@ -118,6 +118,10 @@ public class MessageSendEvent {
       if (event.getMessage().split(" ").length == 2) {
         String[] splited = event.getMessage().split(" ");
 
+        if (splited[1].equals(Laby.labyAPI().getName())) {
+          holyModeration.sendChat().send("§7[§bHolyModeration§7] §cНельзя §fвызвать на проверку §cсамого себя§f!");
+        }
+
         if (!HolyModerationWidget.currentRevise) {
           TryProvaEvent.tryPlayer = splited[1];
           TryProvaEvent.currentTry = true;
