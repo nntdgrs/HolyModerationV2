@@ -11,7 +11,6 @@ public class PlayerTimeCheckEvent {
   public static Boolean currentPlayTimeCheck = false;
 
   private static String lastSession;
-  public static String playerServ;
 
   private static int lastActivityMin;
 

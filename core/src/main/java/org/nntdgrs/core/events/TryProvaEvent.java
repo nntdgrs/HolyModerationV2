@@ -4,14 +4,13 @@ import net.labymod.api.Laby;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.chat.ChatReceiveEvent;
 import org.nntdgrs.core.HolyModeration;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 public class TryProvaEvent {
   private final HolyModeration holyModeration;
 
   public static TryProvaEvent instance;
 
-  private int lastTryPlayerActivityMin = 0;
+  private int lastTryPlayerActivityMin = -1;
 
   public static Boolean currentTry = false;
   public static String tryPlayer = "";
@@ -36,17 +35,18 @@ public class TryProvaEvent {
         if (event.chatMessage().getPlainText().split(" ").length == 6) {
           tryPlayerTimeCheck = true;
           lastTryPlayerSession = event.chatMessage().getPlainText().split(" ")[5];
-          Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + tryPlayer);
+          Laby.labyAPI().minecraft().chatExecutor().chat("/playtime " + tryPlayer, false);
         }
       } else if (event.chatMessage().getPlainText().startsWith("Игрок " + Laby.labyAPI().getName())) {
         event.setCancelled(true);
         if (event.chatMessage().getPlainText().split(" ").length == 6) {
           if (updateModerServer) {
             CheckCurrentAnarchy(event.chatMessage().getPlainText().split(" ")[5]);
+          } else {
+            moderLastSession = event.chatMessage().getPlainText().split(" ")[5];
+            tryPlayerFind = true;
+            Laby.labyAPI().minecraft().chatExecutor().chat("/find " + tryPlayer, false);
           }
-          moderLastSession = event.chatMessage().getPlainText().split(" ")[5];
-          Laby.labyAPI().minecraft().chatExecutor().chat("/find " + tryPlayer);
-          tryPlayerFind = true;
         }
       } else if (event.chatMessage().getPlainText().startsWith("Игрок оффлайн") && tryPlayerFind) {
         event.setCancelled(true);
@@ -91,7 +91,7 @@ public class TryProvaEvent {
           holyModeration.sendChat().send("§7[§bHM§7] §fИгрока §aможно §fпроверять.");
           holyModeration.sendChat().send("§7[§bHM§7] §fВы были перемещены в lobby. Заходите на §a" + lastTryPlayerSession);
           holyModeration.sendChat().send("§7[§bHM§7] §fПри заходе на указаную анархию, вы §aавтоматически§f вызовите его на §eпроверку§f.");
-          holyModeration.sendChat().send("§7[§bHM§7] §fЕсли вы §cпередумали его проверять, пропишите §e.canceltry!");
+          holyModeration.sendChat().send("§7[§bHM§7] §fЕсли вы §cпередумали §fего проверять, пропишите §e§l.canceltry§f!");
           holyModeration.sendChat().send(" ");
         } else if (lastTryPlayerActivityMin > 0) {
           holyModeration.sendChat().send("§7[§bHM§7] §fИгрок §cAFK§f! Вызов на проверку §cневозможен§f!");
